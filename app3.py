@@ -1,9 +1,3 @@
-        # Install required libraries
-# Run these commands in your terminal or command prompt
-# pip install streamlit
-# pip install gspread
-# pip install oauth2client
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -13,23 +7,12 @@ from streamlit_option_menu import option_menu
 from datetime import datetime, timezone, timedelta, date
 from google.cloud import firestore
 import gspread
-#from gspread_dataframe import set_with_dataframe
-
-
-
-# Authenticate to Firestore with the JSON account key.
-# db = firestore.Client.from_service_account_json("firestore-key.json")
-
-# Streamlit app
-# df_products loaded
-# df_clients loaded
-# df_bookings = loaded
 
 Assigned_product = []
 
 
 # Function to read data from Google
-@st.cache_data
+#@st.cache_data()
 def read_google_sheet_x(sheet_url):
     
     # Use credentials to create a client to interact with Google Drive API
@@ -51,7 +34,7 @@ def write_google_sheet_x(dt):
     #print(dt)
     #st.write(dt)
     sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit?pli=1#gid=1859943936"
-
+    
     # Google Sheets credentials
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
     credentials = ServiceAccountCredentials.from_json_keyfile_name("hola-407517-a0a85576df69.json", scope)
@@ -93,6 +76,7 @@ def check_reserva(product_code_selected,quantitat, start_date2, end_date2, df_pr
     print(f'df_reserves entrant check_reserva {df_reserves}')
     #df_reserves = df_reserves.drop(df_reserves.index)
     sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit#gid=0"
+    sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit?pli=1#gid=1859943936"
     if 'df_reserves' not in st.session_state:
         st.session_state.df_reserves = None
     df_reserves = read_google_sheet_x(sheet_url)
@@ -429,113 +413,143 @@ def app():
             #for i in range(1, quantitat): 
             codi_assignat =  check_reserva(product_code_selected, quantitat, inici, final, df_products)
 
-            #st.write("despres check_reserva : ",codi_assignat[0])
-            #filtered_df_productes_1 = df_products[df_products['Codi'] == codi_assignat[index]]
-            #st.write("A gs reserva : codi client: ", subint, "Nom client: ", nom_codi, "docent : ", subint_d, "Nom Docent ", nom_codi_d )
-            #st.write("A gs reserva : TIPUS: ", product_code_selected, "Codi Material: ", codi_assignat, "Descripció : ", row['descripció'], "Quantitat ", quantitat )
-            #st.write("A gs reserva : Data Reserva: ", datetime.now().date(), "Data Inici: ", inici, "Data fi : ", final)        
-            
-
             # si reserva_flag = true ---> Algun producte cumpleix
-        if len(codi_assignat) == 0:
-            st.write('RESERVA NO DISPONIBLE')
-        else:
             #st.write(codi_assignat)
+            if len(codi_assignat) == 0:
+                st.write('RESERVA NO DISPONIBLE')
+            else:
+                #st.write(codi_assignat)
 
-        # st.write(codi_assignat[0])
-            number_of_items = len(reserva_df)
-            number_of_docents = len(nom_codi_d)
+            # st.write(codi_assignat[0])
+                number_of_items = len(reserva_df)
+                number_of_docents = len(nom_codi_d)
 
-        # for i in range (0,number_of_items):
-        #     reserva_df.loc[i,'Codi_Material'] = codi_assignat[i]
-        # st.write(reserva_df)
-            
-            codi_enviar = []
-            codi_ass = ""
-            index_1 = 90
-            count = 0
-            data_ini = datetime.now().date()
-            data_fini = datetime.now().date()
+            # for i in range (0,number_of_items):
+            #     reserva_df.loc[i,'Codi_Material'] = codi_assignat[i]
+            # st.write(reserva_df)
+                
+                codi_enviar = []
+                codi_ass = ""
+                index_1 = 90
+                count = 0
+                data_ini = datetime.now().date()
+                data_fini = datetime.now().date()
 
-            st.write("-------------------------")
-            #st.write(reserva_df)
-            #st.write(codi_assignat)
-            for index, row in reserva_df.iterrows():  # index 0 i 1
-                if row['Quantitat'] == 1:
-                    for i, row_as in enumerate(codi_assignat):
-                        #for j, value in enumerate(row):
-                            if codi_assignat[i][0] == row['0']:
-                                print(f'Matriu 459: {codi_assignat}')
-                                reserva_df.loc[index, 'Codi Material'] = codi_assignat[i][1]
-                                #reserva_df.loc[index, 'Codi Material'] = codi_assignat.loc[i,1]
-                                reserva_df.loc[index, 'Reservat per'] = selected_codi
-                                reserva_df.loc[index, 'Docent'] = selected_docent
-                                reserva_df.loc[index, 'Reserva'] = False
-                                codi_assignat[i][0] = "assignat"
-                                #st.write(codi_assignat)
-                else:
-                    #st.write("quantitat = ", row['Quantitat'])
-                    for j in range(0, row['Quantitat']):
-                        #st.write("j = ",j)
-                        if j == 0:
-                            codi_ass = ""
-                            for i, row_as in enumerate(codi_assignat):
+                st.write("-------------------------")
+                st.warning("Marqueu el flag de Reserva per confirmar els materials entregats")
+                st.warning("i modifiqueu el codi de material en cas necessari.")
+                st.warning("Després premeu el Botó 'Confirmar Reserva'")
+
+                for index, row in reserva_df.iterrows():  # index 0 i 1
+                    if row['Quantitat'] == 1:
+                        for i, row_as in enumerate(codi_assignat):
+                            #for j, value in enumerate(row):
+                                
                                 if codi_assignat[i][0] == row['0']:
-                                    if codi_ass == "":
-                                        reserva_df.loc[index, 'Codi Material'] = codi_assignat[i][1]   
-                                        #reserva_df.loc[index, 'Codi Material'] = codi_assignat.loc[i,1]
-                                        reserva_df.loc[index, 'Quantitat'] = 1            
-                                        data_ini = reserva_df.loc[index, 'Data Inici']  
-                                        data_fini = reserva_df.loc[index, 'Data Final']  
-                                        reserva_df.loc[index, 'Reservat per'] = selected_codi
-                                        reserva_df.loc[index, 'Docent'] = selected_docent 
-                                        reserva_df.loc[index, 'Reserva'] = False
-                                        codi_assignat[i][0] = "assignat"
-                                        #st.write("codi assignat", i, "0 :",codi_assignat[i][1] , " row[0]:", row[0])
-                                    codi_ass = "X"
+                                    print(f'Matriu 459: {codi_assignat}')
+                                    reserva_df.loc[index, 'Codi Material'] = codi_assignat[i][1]
+                                    #reserva_df.loc[index, 'Codi Material'] = codi_assignat.loc[i,1]
+                                    reserva_df.loc[index, 'Reservat per'] = selected_codi
+                                    reserva_df.loc[index, 'Docent'] = selected_docent
+                                    reserva_df.loc[index, 'Reserva'] = False
+                                    codi_assignat[i][0] = "assignat"
                                     #st.write(codi_assignat)
+                                else:
+                                    reserva_df.loc[index, 'Codi Material'] = "RESERVA NO DISPONIBLE"
+                                    reserva_df.loc[index, 'Reserva'] = False
 
-                        else:  # crear nova entrada a reserva_df
-                            codi_ass = ""
-                            index_1 = index_1 + 1
-                            reserva_df.loc[index+index_1,'0'] = row[0]
-                            reserva_df.loc[index+index_1, 'Quantitat'] = 1  
-                            reserva_df.loc[index+index_1, 'Data Inici'] = data_ini
-                            reserva_df.loc[index+index_1, 'Data Final'] = data_fini
-                            reserva_df.loc[index+index_1, 'Reservat per'] = selected_codi
-                            reserva_df.loc[index+index_1, 'Docent'] = selected_docent
-                            reserva_df.loc[index+index_1, 'Reserva'] = False
-                            codi_ass = ""
-                            for k, row_k in enumerate(codi_assignat):
-                                if  row_k[0]== row['0'] and row_k[1] != "assignat" and codi_ass == "":
-                                    reserva_df.loc[index+index_1, 'Codi Material'] = row_k[1] 
-                                    #st.write("codi assignat ", k, "0 :", row_k[1] , " row[0]:", row[0])  
-                                    codi_assignat[k][0] = "assignat"                         
-                                    codi_ass = "X"
-                                    #st.write(codi_assignat)
+                    else:
+                        #st.write("quantitat = ", row['Quantitat'])
+                        for j in range(0, row['Quantitat']):
+                            #st.write("j = ",j)
+                            if j == 0:
+                                codi_ass = ""
+                                for i, row_as in enumerate(codi_assignat):
+                                    if codi_assignat[i][0] == row['0']:
+                                        if codi_ass == "":
+                                            reserva_df.loc[index, 'Codi Material'] = codi_assignat[i][1]   
+                                            #reserva_df.loc[index, 'Codi Material'] = codi_assignat.loc[i,1]
+                                            reserva_df.loc[index, 'Quantitat'] = 1            
+                                            data_ini = reserva_df.loc[index, 'Data Inici']  
+                                            data_fini = reserva_df.loc[index, 'Data Final']  
+                                            reserva_df.loc[index, 'Reservat per'] = selected_codi
+                                            reserva_df.loc[index, 'Docent'] = selected_docent 
+                                            reserva_df.loc[index, 'Reserva'] = False
+                                            codi_assignat[i][0] = "assignat"
+                                            #st.write("codi assignat", i, "0 :",codi_assignat[i][1] , " row[0]:", row[0])
+                                        codi_ass = "X"
+                                        #st.write(codi_assignat)
+
+                            else:  # crear nova entrada a reserva_df
+                                codi_ass = ""
+                                index_1 = index_1 + 1
+                                reserva_df.loc[index+index_1,'0'] = row[0]
+                                reserva_df.loc[index+index_1, 'Quantitat'] = 1  
+                                reserva_df.loc[index+index_1, 'Data Inici'] = data_ini
+                                reserva_df.loc[index+index_1, 'Data Final'] = data_fini
+                                reserva_df.loc[index+index_1, 'Reservat per'] = selected_codi
+                                reserva_df.loc[index+index_1, 'Docent'] = selected_docent
+                                reserva_df.loc[index+index_1, 'Reserva'] = False
+                                codi_ass = ""
+                                for k, row_k in enumerate(codi_assignat):
+                                    if  row_k[0]== row['0'] and row_k[1] != "assignat" and codi_ass == "":
+                                        reserva_df.loc[index+index_1, 'Codi Material'] = row_k[1] 
+                                        #st.write("codi assignat ", k, "0 :", row_k[1] , " row[0]:", row[0])  
+                                        codi_assignat[k][0] = "assignat"                         
+                                        codi_ass = "X"
+                                        #st.write(codi_assignat)
             
-            pd.set_option('display.max_columns', None)  # Display all columns
+        pd.set_option('display.max_columns', None)  # Display all columns
 
-        
-            reserva_df_sorted = reserva_df.sort_values(by='0')
-            st.write(reserva_df_sorted)
-            #st.write(" Material proposat. Podeu modificar-lo (verifiqueu les dades)")
-            #edited_reserva_sorted = st.data_editor(reserva_df_sorted)
+    
+        reserva_df_sorted = reserva_df.sort_values(by='0')
+        #st.data_editor
+
+        edited_reserva_df_sorted = st.data_editor(reserva_df_sorted,
+                        column_config={
+                        "favorite": st.column_config.CheckboxColumn(
+                            "Your favorite?",
+                            help="Select your **favorite** widgets",
+                            default=False,
+                        )
+                    },
+                    disabled=["widgets"],
+                    hide_index=True,
+                    num_rows="dynamic",
+                    )  
+
+
+        #st.write(reserva_df_sorted)
 
 
 
 
-            # Create tabs
-            #tabs = st.tabs(["Reserva proposada", "   ", "   ", "Fer Reserva"])
 
-            # Define content for each tab
-            #with tabs[0]:
-            #st.write(" Material proposat. Podeu modificar-lo (verifiqueu les dades)")
-            #st.write(" Després premeu botó 'Fixar Valors'")
-            #edited_reserva_sorted = st.data_editor(reserva_df_sorted)
-            if st.button('Guardar Reserva'):               
-                print(f'Linia 528: {reserva_df_sorted}')
-                write_google_sheet_x(reserva_df_sorted)
+        if st.button('Confirmar Reserva'):  
+
+
+
+            print(f'Linia 528: {edited_reserva_df_sorted}')
+            reserva_df_sorted_filtered = edited_reserva_df_sorted[edited_reserva_df_sorted['Codi Material'] != "RESERVA NO DISPONIBLE"]
+            print(f'Linia 528: {reserva_df_sorted_filtered}')
+            write_google_sheet_x(reserva_df_sorted_filtered)
+            sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit?pli=1#gid=1859943936"
+            df_reserves = read_google_sheet_x(sheet_url)
+            edited_reserva_df_sorted = edited_reserva_df_sorted.drop(edited_reserva_df_sorted.index)
+            reserva_df_sorted = reserva_df_sorted.drop(reserva_df_sorted.index)
+            reserva_df_sorted_filtered = reserva_df_sorted_filtered.drop(reserva_df_sorted_filtered.index)
+
+
+        # if st.button('Guardar Reserva'):               
+        #     print(f'Linia 528: {reserva_df_sorted}')
+        #     reserva_df_sorted_filtered = reserva_df_sorted[reserva_df_sorted['Codi Material'] != "RESERVA NO DISPONIBLE"]
+        #     print(f'Linia 528: {reserva_df_sorted_filtered}')
+        #     write_google_sheet_x(reserva_df_sorted_filtered)
+        #     sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit?pli=1#gid=1859943936"
+        #     df_reserves = read_google_sheet_x(sheet_url)
+        #     reserva_df_sorted = reserva_df_sorted.drop(reserva_df_sorted.index)
+        #     reserva_df_sorted_filtered = reserva_df_sorted_filtered.drop(reserva_df_sorted_filtered.index)
+
 
                         
 # if __name__ == "__main__":
