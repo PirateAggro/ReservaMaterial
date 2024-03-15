@@ -2,9 +2,9 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 from google.cloud import firestore
-
+import oauth2client
+from oauth2client.service_account import ServiceAccountCredentials
 import  retorn, historial, dadesmestres, materials, reserva_fb_Boot, reserva, app3
 
 st.set_page_config(
