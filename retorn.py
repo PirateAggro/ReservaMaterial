@@ -6,7 +6,7 @@ import oauth2client
 from oauth2client.service_account import ServiceAccountCredentials
 from streamlit_option_menu import option_menu
 from datetime import datetime, timezone, timedelta, date
-from google.cloud import firestore
+#from google.cloud import firestore
 
 
 # Authenticate to Firestore with the JSON account key.
