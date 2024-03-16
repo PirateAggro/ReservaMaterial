@@ -10,7 +10,7 @@ from datetime import datetime, timezone, timedelta, date
 
 
 # Authenticate to Firestore with the JSON account key.
-db = firestore.Client.from_service_account_json("firestore-key.json")
+#db = firestore.Client.from_service_account_json("firestore-key.json")
 
 # Function to read data from Google Sheet
 def read_google_sheet_x(sheet_url):
