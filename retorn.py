@@ -31,31 +31,27 @@ def read_google_sheet_x(sheet_url):
 
 def write_google_sheet_x(index, docent, comentari, flag_reserva):
 
-    #print(f'index a write: {index}')
-    if flag_reserva == True:
-        sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit?pli=1#gid=1859943936"
+    sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit?pli=1#gid=1859943936"
 
-        # Google Sheets credentials
-        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        credentials = ServiceAccountCredentials.from_json_keyfile_name("hola-407517-a0a85576df69.json", scope)
-        gc = gspread.authorize(credentials)
-        sheet = gc.open_by_url(sheet_url).sheet1
-        
-        last_row = len(sheet.get_all_values())+1
-        #st.write(dt)
-        # Example datetime object
-        dt = datetime.now().strftime('%a %d %b %Y, %I:%M%p')
-        
+    # Google Sheets credentials
+    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    credentials = ServiceAccountCredentials.from_json_keyfile_name("hola-407517-a0a85576df69.json", scope)
+    gc = gspread.authorize(credentials)
+    sheet = gc.open_by_url(sheet_url).sheet1
+    
+    last_row = len(sheet.get_all_values())+1
+    #st.write(dt)
+    # Example datetime object
+    dt = datetime.now().strftime('%a %d %b %Y, %I:%M%p')
+    
 
-        for i in range(last_row):
-            if i == index :
-                sheet.update_cell(index,10, 'retornat' )  #estat       
-                sheet.update_cell(index,13, docent  )  #docent rep producte
-                sheet.update_cell(index,12, comentari )  #docent rep producte
-                sheet.update_cell(index,14, dt )  #docent rep producte
-                st.warning('Reserva retornada amb èxit', icon="👋")
-    else:
-        st.warning('Marqueu la reserva que voleu confirmar i premeu Confirmar Reserva')
+    for i in range(last_row):
+        if i == index :
+            sheet.update_cell(index,10, 'retornat' )  #estat       
+            sheet.update_cell(index,13, docent  )  #docent rep producte
+            sheet.update_cell(index,12, comentari )  #docent rep producte
+            sheet.update_cell(index,14, dt )  #docent rep producte
+            st.warning('Reserva retornada amb èxit', icon="👋")
         
 def app():
 
@@ -151,12 +147,12 @@ def app():
     
     if st.button('RETORN'):
         for index, row in edited_filtered_df_prod.iterrows():  # index 0 i 1  
-            if row['producte retornat'] == True:
+            if row['producte retornat'] == True :
                 if row['estat retorn'] == " ":
                     st.warning("Indica l'estat del material retornat i prem 'RETORN'")
                 else:
                     #print(f'index : {index}')
                     #print(f'Line 405: edited df: {reserva_df}')
-                    write_google_sheet_x(index+2, docent, row['estat retorn'], row['Reserva'])
+                    write_google_sheet_x(index+2, docent, row['estat retorn'])
       
     
