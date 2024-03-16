@@ -29,7 +29,7 @@ def read_google_sheet_x(sheet_url):
 
     return df
 
-def write_google_sheet_x(index, docent, comentari, flag_reserva):
+def write_google_sheet_x(index, docent, comentari):
 
     sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit?pli=1#gid=1859943936"
 
