@@ -534,11 +534,12 @@ def app():
             reserva_df_sorted_filtered = edited_reserva_df_sorted[edited_reserva_df_sorted['Codi Material'] != "RESERVA NO DISPONIBLE"]
             print(f'Linia 528: {reserva_df_sorted_filtered}')
             write_google_sheet_x(reserva_df_sorted_filtered)
-            sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit?pli=1#gid=1859943936"
-            df_reserves = read_google_sheet_x(sheet_url)
-            edited_reserva_df_sorted = edited_reserva_df_sorted.drop(edited_reserva_df_sorted.index)
-            reserva_df_sorted = reserva_df_sorted.drop(reserva_df_sorted.index)
-            reserva_df_sorted_filtered = reserva_df_sorted_filtered.drop(reserva_df_sorted_filtered.index)
+
+            #sheet_url = "https://docs.google.com/spreadsheets/d/16AbAcJcrp5RL-dEO5EjddgqJlwu9JUo-DjzS5tZlzUU/edit?pli=1#gid=1859943936"
+            # df_reserves = read_google_sheet_x(sheet_url)
+            # edited_reserva_df_sorted = edited_reserva_df_sorted.drop(edited_reserva_df_sorted.index)
+            # reserva_df_sorted = reserva_df_sorted.drop(reserva_df_sorted.index)
+            # reserva_df_sorted_filtered = reserva_df_sorted_filtered.drop(reserva_df_sorted_filtered.index)
 
 
         # if st.button('Guardar Reserva'):               
