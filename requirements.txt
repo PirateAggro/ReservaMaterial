@@ -7,3 +7,4 @@ pandas
 click
 gspread
 datetime
+oauth2client
