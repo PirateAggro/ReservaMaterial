@@ -5,14 +5,14 @@ import gspread
 #from google.cloud import firestore
 import oauth2client
 from oauth2client.service_account import ServiceAccountCredentials
-import  retorn, historial, app3
+import  retorn, historial, app4
 
-st.set_page_config(
-    page_title="Gestió Reserves",
-    page_icon="👋",
-    layout="wide",
+# st.set_page_config(
+#     page_title="Gestió Reserves",
+#     page_icon="👋",
+#     layout="wide",
     
-)
+# )
 
 # FUNCTIONS DEFINITION
 
@@ -62,7 +62,7 @@ class Multiapp:
             st.image('sunrise.jpeg', caption='Sunrise by the mountains')
 
         if app == 'Reserva':
-            app3.app()
+            app4.app()
 
         if app == 'Retorn':
             retorn.app()
