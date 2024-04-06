@@ -8,3 +8,4 @@ click
 gspread
 datetime
 oauth2client
+streamlit_calendar
